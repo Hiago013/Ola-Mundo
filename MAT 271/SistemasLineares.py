@@ -96,7 +96,7 @@ class SisLin:
         
         error = lambda x1, x2: np.linalg.norm(x1 - x2)
         if erro == 1:
-            error = lambda x1, x2: np.linalg.norm(x1- x2)/np.linalg.norm(x1)
+            error = lambda x1, x2: np.max(np.abs(x1- x2))/np.max(np.abs(x1))
         
         a = np.copy(self.A)
         b = np.copy(self.B).T
@@ -151,7 +151,7 @@ class SisLin:
         
         error = lambda x1, x2: np.linalg.norm(x1 - x2)
         if erro == 1:
-            error = lambda x1, x2: np.linalg.norm(x1- x2)/np.linalg.norm(x1)
+            error = lambda x1, x2: np.max(np.abs(x1- x2))/np.max(np.abs(x1))
         
         a = np.copy(self.A)
         b = np.copy(self.B).T
