@@ -1,7 +1,7 @@
 from control import tf, impulse_response
 import matplotlib.pyplot as plt
 from lcapy.discretetime import z
-from sympy import apart
+from sympy import apart, pprint
 
 
 class digital_controller:
@@ -16,9 +16,11 @@ class digital_controller:
         for grau in range(len(den)):
             den_aux += den[grau] * z ** (len(den) - grau -1)
         
-        self.GkS = apart( num_aux / den_aux )
+        self.GkI = (num_aux / den_aux).simplify()
+        self.GkS = apart( self.GkI )
 
     def X_k(self, k=4, plot=False):
+        print('*' * 15, f'{k} primeiras saídas', '*' * 15)
         time , magnitude = impulse_response(self.GkC)
         for i in range(k):
             print(f'x({i}) = {magnitude[i]}')
@@ -26,7 +28,18 @@ class digital_controller:
             plt.stem(time[:k], magnitude[:k])
             plt.grid()
             plt.show()
+        print(' ')
         return time[:k], magnitude[:k]
     
     def partfrac(self):
+        print('*' * 15, 'Expansão em frações parciais', '*' * 15 )
+        pprint(self.GkS)
+        print(' ')
         return self.GkS
+    
+    def IZT(self):
+        print('*' * 15, 'Inversa da transformada Z', '*' * 15)
+        pprint(self.GkI.IZT())
+        print(' ')
+        return self.GkI.IZT()
+
