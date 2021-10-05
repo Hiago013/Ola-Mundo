@@ -1,4 +1,4 @@
-from control import tf, impulse_response, parallel
+from control import tf, impulse_response
 import matplotlib.pyplot as plt
 from lcapy.discretetime import z
 from sympy import apart, pprint
@@ -19,9 +19,13 @@ class digital_controller:
         self.GkI = (num_aux / den_aux).simplify()
         self.GkS = apart( self.GkI )
     
-    def __add__(self, X):
-        pprint(self.GkI + X.GkI)
-        return (self.GkI + X.GkI)
+    def __add__(self, *argsX):
+        X = 0
+        for item in argsX:
+            X += item.GkI
+        pprint((self.GkI + X).simplify())
+        return (self.GkI + X)
+    
 
     def X_k(self, k=4, plot=False):
         print('*' * 15, f'{k} primeiras saídas', '*' * 15)
@@ -46,5 +50,10 @@ class digital_controller:
         pprint(self.GkI.IZT())
         print(' ')
         return self.GkI.IZT()
-
-
+    
+    def sum(self, *args):
+        X = 0
+        for item in args:
+            X += item.GkI
+        pprint((X + self.GkI).simplify())
+        return X + self.GkI
