@@ -8,7 +8,6 @@ class digital_controller:
     def __init__(self, num, den, tau=1):
         
         self.GkC = tf(num, den, tau)
-        self.GkS = 1
         num_aux = den_aux = 0
 
         for grau in range(len(num)):
@@ -17,7 +16,7 @@ class digital_controller:
         for grau in range(len(den)):
             den_aux += den[grau] * z ** (len(den) - grau -1)
         
-        self.Gks = num_aux / den_aux
+        self.GkS = apart( num_aux / den_aux )
 
     def X_k(self, k=4, plot=False):
         time , magnitude = impulse_response(self.GkC)
@@ -28,3 +27,6 @@ class digital_controller:
             plt.grid()
             plt.show()
         return time[:k], magnitude[:k]
+    
+    def partfrac(self):
+        return self.GkS
