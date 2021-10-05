@@ -1,6 +1,7 @@
-from control import tf
 from controle import digital_controller
 
-Xk_1 = tf([10, 5], [1, -1.2, 0.2], 1)
-Q1 = digital_controller(Xk_1)
-Q1.X_k(plot=True)
+Q1_num = [10, 5]
+Q1_den = [1, -1.2, .2]
+Q1 = digital_controller(Q1_num, Q1_den)
+Q1.X_k()
+Q1.part_frac()
