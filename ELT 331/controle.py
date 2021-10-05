@@ -2,7 +2,7 @@ from control import tf, impulse_response
 import matplotlib.pyplot as plt
 from lcapy.discretetime import z
 from sympy import apart, pprint
-
+from numpy import arange
 
 class digital_controller:
     def __init__(self, num, den, tau=1):
@@ -28,13 +28,18 @@ class digital_controller:
     
 
     def X_k(self, k=4, plot=False):
-        print('*' * 15, f'{k} primeiras saídas', '*' * 15)
-        time , magnitude = impulse_response(self.GkC)
+        print('*' * 15, f'Os primeiros {k} resultados', '*' * 15)
+        time , magnitude = impulse_response(self.GkC, T = arange(0, k, 1))
         for i in range(k):
             print(f'x({i}) = {magnitude[i]}')
         if plot == True:
+            plt.style.use('ggplot')
             plt.stem(time[:k], magnitude[:k])
-            plt.grid()
+            plt.title(f'{k} primeiros resultados', fontfamily='monospace', fontweight='bold')
+            plt.xlabel('k', fontsize=18, fontfamily='monospace')
+            plt.ylabel('x(k)', fontsize=18, fontfamily='monospace')
+            plt.tight_layout()
+            # plt.grid()
             plt.show()
         print(' ')
         return time[:k], magnitude[:k]

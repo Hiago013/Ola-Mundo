@@ -40,3 +40,9 @@ Q6_num = [2, 0, 1, 0]
 Q6_den = [1, -5, 8, -4]
 Q6 = digital_controller(Q6_num, Q6_den)
 Q6.X_k(5)
+# ------------------------------------------ #
+print('- ' * 15,' Questão 07 ', '- ' * 15)
+Q7_num = [1, 2]
+Q7_den = [1, -2, 0 , 0]
+Q7 = digital_controller(Q7_num, Q7_den)
+Q7.X_k(6)
