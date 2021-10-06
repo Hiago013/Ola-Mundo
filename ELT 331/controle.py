@@ -36,7 +36,7 @@ class digital_controller:
                 den_aux += den[grau] * s ** (len(den) - grau -1)
             
             self.GsI = (num_aux / den_aux).simplify()
-            self.GsS = apart( self.GsI )
+            self.GsS = apart( self.GsI/s )
     
     def __add__(self, *argsX):
         X = 0
@@ -90,12 +90,14 @@ class digital_controller:
     def TZ(self, T_max=10):
         A = self.GsC.sample(self.tau)
         # print(A) -- preciso ajustar isso aqui
-        T_amos = arange(0, T_max + 1, self.tau)
+        T_amos = arange(0, T_max * self.tau + self.tau, self.tau)
         # print(feedback(A)) -- ajustar este também
         time, mag = step_response(feedback(A), T = T_amos)
-        plt.bar(T_amos - self.tau/2, mag, self.tau, edgecolor='black', color='white')
-        plt.plot(T_amos, [1 for i in T_amos], color='black', alpha=.5, linewidth=2)
-        plt.xlabel('Tempo (s)', fontfamily='monospace', fontsize='18')
+        print(f'x({T_max}) = {mag[-1]}')
+        plt.bar((T_amos - self.tau/2) , mag, self.tau , edgecolor='black', color='white')
+        plt.plot(T_amos , [1 for i in T_amos], color='black', alpha=.5, linewidth=2)
+        plt.xlabel('Número de amostras', fontfamily='monospace', fontsize='18')
         plt.ylabel('Amplitude', fontfamily='monospace', fontsize='18')
+        plt.xticks((T_amos - self.tau/2), arange(0, T_max +1, 1))
         plt.tight_layout()
         plt.show()
