@@ -46,3 +46,16 @@ Q7_num = [1, 2]
 Q7_den = [1, -2, 0 , 0]
 Q7 = digital_controller(Q7_num, Q7_den)
 Q7.X_k(6)
+# ------------------------------------------ #
+print('- ' * 15,' Questão 08 ', '- ' * 15)
+Q7_num = [5, 0]
+Q7_den = [1, 0, 1]
+Q7 = digital_controller(Q7_num, Q7_den)
+
+# ------------------------------------------ #
+print('- ' * 15,' Questão 09 ', '- ' * 15)
+Q7_num = [1, 0, 0, 0]
+Q7_den = [2, -4, 3, -1]
+Q7 = digital_controller(Q7_num, Q7_den)
+Q7.partfrac()
+Q7.X_k(8)
