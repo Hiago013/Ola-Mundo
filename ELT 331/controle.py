@@ -87,22 +87,15 @@ class digital_controller:
         pprint((X + self.GkI).simplify())
         return X + self.GkI
     
-    def TZ(self, T_max):
+    def TZ(self, T_max=10):
         A = self.GsC.sample(self.tau)
-        print(A)
+        # print(A) -- preciso ajustar isso aqui
         T_amos = arange(0, T_max + 1, self.tau)
-        print(feedback(A))
+        # print(feedback(A)) -- ajustar este também
         time, mag = step_response(feedback(A), T = T_amos)
         plt.bar(T_amos - self.tau/2, mag, self.tau, edgecolor='black', color='white')
         plt.plot(T_amos, [1 for i in T_amos], color='black', alpha=.5, linewidth=2)
-        plt.xlabel('Número de amostras', fontfamily='monospace', fontsize='18')
+        plt.xlabel('Tempo (s)', fontfamily='monospace', fontsize='18')
         plt.ylabel('Amplitude', fontfamily='monospace', fontsize='18')
+        plt.tight_layout()
         plt.show()
-
-
-print('- ' * 15,' Questão 09 ', '- ' * 15)
-Q7_num = [1]
-Q7_den = [1, 1, 0]
-Q7 = digital_controller(Xs = (Q7_num, Q7_den), tau=1)
-# Q7.partfrac('s')
-Q7.TZ(20)
