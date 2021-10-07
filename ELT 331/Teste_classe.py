@@ -62,8 +62,8 @@ Q9.X_k(8)
 '''
 # ------------------------------------------ #
 print('- ' * 15,' Questão 13 ', '- ' * 15)
-Q13_num = [1]
-Q13_den = [1, 2, 1]
+Q13_num = [4]
+Q13_den = [1, 2]
 Q13 = digital_controller(Xs = (Q13_num, Q13_den), tau=.1)
 Q13.partfrac('s')
 Q13.TZ(20)
