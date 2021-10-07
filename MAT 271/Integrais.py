@@ -1,5 +1,5 @@
 import numpy as np
-from sympy import var, Lambda, exp, log, sin, cos, tan, diff
+from sympy import var, Lambda, exp, log, sin, cos, tan, sqrt, diff
 
 class Integrais:
     
@@ -29,6 +29,7 @@ class Integrais:
         
     
     def trapezio(self, n = 2, dp = 4, erro=0.01):
+        print('*'*15,'Regra do Trapézio', 15*'*')
         f = self._f
         a = self._a
         b = self._b
@@ -60,6 +61,7 @@ class Integrais:
         return y_round
 
     def simpson1_3(self, n=2, dp=4, erro=0.01):
+        print('*'*15,'Regra de 1/3 de Simpson', 15*'*')
         f = self._f
         a = self._a
         b = self._b
@@ -91,6 +93,41 @@ class Integrais:
             print(f'Para garantia de um |E| < {erro}, utilize n = {n_min}\n')
         
         return y_round
+
+    def simpson3_8(self, n=3, dp=4, erro=0.01):
+        print('*'*15,'Regra de 3/8 de Simpson', 15*'*')
+        f = self._f
+        a = self._a
+        b = self._b
+        h = (b - a) / n
+        df4_max = self.erro_spn1_3()
+        #n_min = (df4_max * (b - a)**5 / (180 * erro))**0.25
+        #n_min = np.ceil(n_min)
+        total = f(a) + f(b)
+        n_aux = a + h
+        k = 1
+        
+        while n_aux < b:
+            if k%3 == 0:
+                total += np.float64(2 * f(n_aux))
+            else:
+                total += np.float64(3 * f(n_aux))
+            k += 1
+            n_aux += h
+            
+        y = np.float64(3 / 8 * h  * (total))
+        E = df4_max * (b - a ) * h ** 4 / 80
+        
+        y_round = np.round(y, dp)
+        E_round = np.round(E, dp)
+        print(f'Portanto, o valor da integral é:\n{y_round}, com |E| < {E_round}\n')
+        
+        #if E_round > erro:
+        #    print('*' * 20, ' AVISO ', '*' * 20)
+        #    print(f'Para garantia de um |E| < {erro}, utilize n = {n_min}\n')
+        
+        return y_round
+
 
 
 
