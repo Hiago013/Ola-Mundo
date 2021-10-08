@@ -2,7 +2,7 @@ from control import tf, impulse_response, feedback, step_response
 import matplotlib.pyplot as plt
 from lcapy.discretetime import z
 from sympy import apart, pprint, var
-from numpy import arange, ones
+from numpy import arange, ones, linspace
 
 class digital_controller:
     def __init__(self, Xk = None, Xs = None, tau=1):
@@ -93,13 +93,20 @@ class digital_controller:
         T_amos = arange(0, T_max * self.tau + self.tau, self.tau)
         # print(feedback(A)) -- ajustar este também
         time, mag = step_response(feedback(A), T = T_amos)
-
+        t = linspace(0, len(time)-1, 1000)
+        new_mag = []
+        k = 0
+        for valor in t:
+            if valor-1 > k:
+                k += 1
+            new_mag.append(mag[k])
+        # ---------- Imprime na tela x(k) até T_Max ---------- 
         for i in arange(0, T_max + 1, 1):
             print(f'x({i}) = {mag[i]:.4f}')
-
+        # ---------- Plotagem ---------- 
         plt.style.use('ggplot')
-        plt.bar(arange(0, T_max + 1, 1)+.5, mag, 1 , edgecolor='black', color='white')
-        plt.plot(arange(0, T_max + 2, 1), ones(T_max+2), color='black', alpha=.5, linewidth=2)
+        plt.plot(t, new_mag, linewidth=2, color='red')
+        plt.plot(t, ones(len(t)), color='black', alpha=.5, linewidth=2)
         plt.xlabel('Número de amostras', fontfamily='monospace', fontsize='18')
         plt.ylabel('Amplitude', fontfamily='monospace', fontsize='18')
         plt.tight_layout()
