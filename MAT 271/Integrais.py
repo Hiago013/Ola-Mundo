@@ -1,5 +1,5 @@
 import numpy as np
-from sympy import var, Lambda, exp, log, sin, cos, tan, sqrt, diff
+from sympy import var, Lambda, exp, log, sin, cos, tan, sqrt, diff, solve
 
 class Integrais:
     
@@ -69,6 +69,10 @@ class Integrais:
         df4_max = self.erro_spn1_3()
         n_min = (df4_max * (b - a)**5 / (180 * erro))**0.25
         n_min = np.ceil(n_min)
+
+        while n_min % 2 != 0:
+            n_min += 1
+
         total = f(a) + f(b)
         n_aux = a + h
         k = 1
@@ -101,8 +105,11 @@ class Integrais:
         b = self._b
         h = (b - a) / n
         df4_max = self.erro_spn1_3()
-        #n_min = (df4_max * (b - a)**5 / (180 * erro))**0.25
-        #n_min = np.ceil(n_min)
+        n_min = (df4_max * (b - a)**5 / (80 * erro))**0.25
+        n_min = np.ceil(n_min)
+        
+        while n_min % 3 != 0:
+            n_min += 1
         total = f(a) + f(b)
         n_aux = a + h
         k = 1
@@ -122,9 +129,9 @@ class Integrais:
         E_round = np.round(E, dp)
         print(f'Portanto, o valor da integral é:\n{y_round}, com |E| < {E_round}\n')
         
-        #if E_round > erro:
-        #    print('*' * 20, ' AVISO ', '*' * 20)
-        #    print(f'Para garantia de um |E| < {erro}, utilize n = {n_min}\n')
+        if E_round > erro:
+            print('*' * 20, ' AVISO ', '*' * 20)
+            print(f'Para garantia de um |E| < {erro}, utilize n = {n_min}\n')
         
         return y_round
 
