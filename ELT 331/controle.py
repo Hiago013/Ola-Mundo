@@ -3,10 +3,12 @@ import matplotlib.pyplot as plt
 from lcapy.discretetime import z
 from sympy import apart, pprint, var
 from numpy import arange, ones, linspace
+import numpy as np
 
 class digital_controller:
     def __init__(self, Xk = None, Xs = None, tau=1):
         self.tau = tau
+        self.Gc = None
         if Xk != None:
             self.Xk = Xk
             num, den = Xk
@@ -92,6 +94,12 @@ class digital_controller:
         # print(A) -- preciso ajustar isso aqui
         T_amos = arange(0, T_max * self.tau + self.tau, self.tau)
         # print(feedback(A)) -- ajustar este também
+
+        if self.Gc != None:
+            print(A)
+            print(self.Gc)
+            B = A * self.Gc
+
         time, mag = step_response(feedback(A), T = T_amos)
         t = linspace(0, len(time)-1, 1000)
         new_mag = []
@@ -101,8 +109,8 @@ class digital_controller:
                 k += 1
             new_mag.append(mag[k])
         # ---------- Imprime na tela x(k) até T_Max ---------- 
-        for i in arange(0, T_max + 1, 1):
-            print(f'x({i}) = {mag[i]:.4f}')
+        #for i in arange(0, T_max + 1, 1):
+        #    print(f'x({i}) = {mag[i]:.4f}')
         # ---------- Plotagem ---------- 
         plt.style.use('ggplot')
         plt.plot(t, new_mag, linewidth=2, color='red')
@@ -111,3 +119,20 @@ class digital_controller:
         plt.ylabel('Amplitude', fontfamily='monospace', fontsize='18')
         plt.tight_layout()
         plt.show()
+    
+    def Gs2Gk(self, Gs, K, dp=3):
+        Gc = tf(Gs[0], Gs[1])
+        Gc_zeros = Gc.zero()
+        Gc_poles = Gc.pole()
+        A = np.round(-np.exp(Gc_zeros[0] * self.tau), dp)
+        B = np.round(-np.exp(Gc_poles[0] * self.tau), dp)
+        C = np.round(( K * Gc_zeros[0]  * (1+B) ) / ( (1+A) * Gc_poles[0] ), dp)
+        self.Gc = C * tf([1, A], [1, B], self.tau)
+        return (C, tf([1, A], [1, B], self.tau))
+
+G = digital_controller(Xs=([4], [1, 2, 0]), tau=.01)
+G.Gs2Gk(([1, 4.41], [1, 18.4]), 41.7, 3)
+G.TZ(200)
+
+
+

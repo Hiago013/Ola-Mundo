@@ -1,9 +1,10 @@
 from controle import digital_controller
-'''
+
 print('- ' * 15,' Questão 01 ', '- ' * 15)
 Q1_num = [10, 5]
 Q1_den = [1, -1.2, .2]
 Q1 = digital_controller((Q1_num, Q1_den))
+Q1.partfrac()
 Q1.X_k(5)
 
 # ------------------------------------------ #
@@ -59,7 +60,7 @@ Q9_den = [2, -4, 3, -1]
 Q9 = digital_controller((Q9_num, Q9_den))
 Q9.partfrac()
 Q9.X_k(8)
-'''
+
 # ------------------------------------------ #
 print('- ' * 15,' Questão 13 ', '- ' * 15)
 Q13_num = [1]

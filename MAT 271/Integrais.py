@@ -136,6 +136,15 @@ class Integrais:
         return y_round
 
 
+        def verify_improp(self):
+            x = var('x')
+            a = self._a
+            b = self._b
+            f = self._f
+            den = f(x).simplify().as_numer_denom()[1]
+            
+
+
 
 
 
