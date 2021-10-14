@@ -89,7 +89,14 @@ class digital_controller:
         pprint((X + self.GkI).simplify())
         return X + self.GkI
     
-    def TZ(self, T_max=10):
+    def TZ(self, fb = 1):
+        print('G[z]: ')
+        A = self.GsC.sample(self.tau)
+        print(A)
+        print('F[z]: ')
+        print(feedback(A, fb))
+
+    def plot(self, T_max = 10):
         A = self.GsC.sample(self.tau)
         # print(A) -- preciso ajustar isso aqui
         T_amos = arange(0, T_max * self.tau + self.tau, self.tau)
@@ -108,10 +115,6 @@ class digital_controller:
             if valor-1 > k:
                 k += 1
             new_mag.append(mag[k])
-        # ---------- Imprime na tela x(k) até T_Max ---------- 
-        #for i in arange(0, T_max + 1, 1):
-        #    print(f'x({i}) = {mag[i]:.4f}')
-        # ---------- Plotagem ---------- 
         plt.style.use('ggplot')
         plt.plot(t, new_mag, linewidth=2, color='red')
         plt.plot(t, ones(len(t)), color='black', alpha=.5, linewidth=2)
@@ -129,10 +132,4 @@ class digital_controller:
         C = np.round(( K * Gc_zeros[0]  * (1+B) ) / ( (1+A) * Gc_poles[0] ), dp)
         self.Gc = C * tf([1, A], [1, B], self.tau)
         return (C, tf([1, A], [1, B], self.tau))
-
-G = digital_controller(Xs=([4], [1, 2, 0]), tau=.01)
-G.Gs2Gk(([1, 4.41], [1, 18.4]), 41.7, 3)
-G.TZ(200)
-
-
 

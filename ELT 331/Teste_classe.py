@@ -1,5 +1,5 @@
 from controle import digital_controller
-
+'''
 print('- ' * 15,' Questão 01 ', '- ' * 15)
 Q1_num = [10, 5]
 Q1_den = [1, -1.2, .2]
@@ -68,3 +68,12 @@ Q13_den = [1, 1, 0]
 Q13 = digital_controller(Xs = (Q13_num, Q13_den), tau=1)
 Q13.partfrac('s')
 Q13.TZ(20)
+'''
+# ------------------------------------------ #
+print('- ' * 15,' Questão 14 ', '- ' * 15)
+Q14_num = [4]
+Q14_den = [1, 2]
+Q14 = digital_controller(Xs = (Q14_num, Q14_den), tau=.1)
+Q14.partfrac('s')
+Q14.TZ()
+Q14.plot(16)
