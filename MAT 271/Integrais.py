@@ -9,7 +9,7 @@ class Integrais:
         self._b = b
 
     def erro_trp(self):
-        var('x')
+        x = var('x')
         t = np.linspace(self._a, self._b, 100)
         df2 = Lambda(x, diff(diff(self._f(x))))
         t_val = np.array(np.absolute([df2(i) for i in t]))
@@ -17,7 +17,7 @@ class Integrais:
         return np.float64(t_max)
     
     def erro_spn1_3(self):
-        var('x')
+        x = var('x')
         t = np.linspace(self._a, self._b, 100)
         df4 = diff(self._f(x), x)
         for i in range(3):
