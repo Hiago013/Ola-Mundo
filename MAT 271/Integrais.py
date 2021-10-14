@@ -3,7 +3,10 @@ from sympy import var, Lambda, exp, log, sin, cos, tan, sqrt, diff, solve
 
 class Integrais:
     
-    def __init__(self, f, a, b):
+    def __init__(self, f, a, b, pts = None):
+        if pts != None:
+            self._x = np.array(pts[0])
+            self._y = np.array(pts[1])
         self._f = f
         self._a = a
         self._b = b
@@ -185,14 +188,62 @@ class Integrais:
             print(f'Para garantia de um |E| < {erro}, utilize n = {n_min}\n')
         
         return y_round
+    
+
+    def num_trapezio(self, dp = 4):
+        x = self._x
+        y = self._y
+        h = x[1] - x[0]
+        total = y[0] + y[-1]
+        y = y[1:-1]
+        for item in y:
+            total += np.float64(2 * item)
+        y = np.round( np.float64(h/2 * total), dp)
+        return y
+
+    def num_13(self, dp = 4):
+        x = self._x
+        y = self._y
+        h = x[1] - x[0]
+        total = y[0] + y[-1]
+        y = y[1:-1]
+        for counter, item in enumerate(y):
+            if (counter+1)%2 == 0:
+                total += np.float64(2 * item)
+            else:
+                total += np.float64(4 * item)
+        y = np.round( np.float64(h/3 * total), dp)
+        return y
+
+    def num_38(self, dp = 4):
+        x = self._x
+        y = self._y
+        h = x[1] - x[0]
+        total = y[0] + y[-1]
+        y = y[1:-1]
+        for counter, item in enumerate(y):
+            if (counter+1) % 3 == 0:
+                total += np.float64(2 * item)
+            else:
+                total += np.float64(3 * item)
+        y = np.round(np.float64(3 * h / 8 * total), dp)
+        return y
+        
+'''
+x = [0, 10, 20, 30, 50]
+y1 = [50.8, 86.2, 136, 72.8, 51]
+y2 = [113.6, 144.5, 185, 171.2, 95.3]
+
+y = np.array(y2) - np.array(y1)
+
+y1 = Integrais(1, 1, 1, pts=(x[3:], y[3:]))
+print(y1.num_trapezio())
+y2 = Integrais(1, 1, 1, pts=(x[:4], y[:4]))
+print(y2.num_13())
+print(y1.num_trapezio() + y2.num_13())
+'''
 
 
-        def verify_improp(self):
-            x = var('x')
-            a = self._a
-            b = self._b
-            f = self._f
-            den = f(x).simplify().as_numer_denom()[1]
             
 
 
