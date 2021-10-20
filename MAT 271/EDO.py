@@ -74,6 +74,33 @@ class EDO:
             y[k] = y_aux
         y = np.round(y, dp)
         return (y[-1], y, x)
+    
+    def runge_kutta4(self, I, N = 5, dp = 4):
+        x0 = self._x0
+        y0 = self._y0
+        dy = self._dy
+        h = (I[1] - self._x0) / N
+        aux = x0
+        y = np.empty(N+1, dtype=float)
+        x = np.empty(N+1, dtype=float)
+        x[0] = x0
+        y[0] = y0
+        k = 0
+
+        while k < N:
+            k1 = dy(aux, y[k])
+            k2 = dy(aux + h/2, y[k] + h/2 * k1)
+            k3 = dy(aux + h/2, y[k] + h/2 * k2)
+            k4 = dy(aux + h, y[k] + h * k3)
+            #print(k1, k2, k3, k4)
+            y_aux = y[k] + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+            #print(y_aux)
+            aux += h
+            k += 1
+            x[k] = aux
+            y[k] = y_aux
+        y = np.round(y, dp)
+        return (y[-1], y, x)
 
 # Exemplo de como usar a classe EDo
 #x = var('x')
@@ -82,7 +109,7 @@ class EDO:
 #y0 = 1
 #dy = Lambda((x, y), x + y)
 #I = (0, 2)
-#N = 10
+#N = 4
 #Y = EDO(dy, y0, x0)
-#y1, y_steps, x_steps = Y.runge_kutta2(I, N, dp=4)
-#print(y1)
+#y1, y_steps, x_steps = Y.runge_kutta4(I, N, dp=4)
+#print(y_steps)
