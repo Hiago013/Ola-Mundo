@@ -65,14 +65,35 @@ class digital:
             plt.show()
 
         return fz, time, mag
+
+    def controlador(self, K, Gc, dp=6):
+        num, den = Gc
+        a = num[1]
+        b = den[1]
+        param = lambda x: np.exp(-self._tau * x)
+
+        A = param(a)
+        B = param(b)
+        C = K * a * (1 - B) / (b * (1-A))
+
+        return np.round( (A, B, C), dp)
+
+
     
 
-#gss = 10 / (s + 10*s**2)
-#gsc = tf([10], [10, 1])
-#tau = 2
-#Q16 = digital(Gs=gss, Gsc=gsc, tau = 2)
-#print(Q16.s2z())
-#print(Q16.s2t())
+gss = 1/(10*s**3 + s**2)
+gsc = tf(1, [10, 1, 0])
+print(gsc)
+tau = .2
+Q16 = digital(Gs=gss, Gsc=gsc, tau = tau)
+print(Q16.s2z())
+print(Q16.s2t())
+val = Q16.Fz(200, plot=True)
+print(val[0])
+
+gcs = ([1, 0.1], [1, 2])
+K = 8
+print( Q16.controlador(K, gcs, 4) )
 
 #fz, time, mag = Q16.Fz(14, fb = 0.05)
 #print(mag)
