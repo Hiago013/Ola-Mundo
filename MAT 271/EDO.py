@@ -102,14 +102,84 @@ class EDO:
         y = np.round(y, dp)
         return (y[-1], y, x)
 
-# Exemplo de como usar a classe EDo
-#x = var('x')
-#y = var('y')
-#x0 = 0
-#y0 = 1
-#dy = Lambda((x, y), x + y)
-#I = (0, 2)
-#N = 4
-#Y = EDO(dy, y0, x0)
-#y1, y_steps, x_steps = Y.runge_kutta4(I, N, dp=4)
-#print(y_steps)
+    def runge_kutta2z(self, dz, z0, I, N = 5, dp = 4):
+        x0 = self._x0
+        y0 = self._y0
+        dy = self._dy
+        h = (I[1] - self._x0) / N
+        aux = x0
+        y = np.empty(N+1, dtype=float)
+        x = np.empty(N+1, dtype=float)
+        z = np.empty(N+1, dtype=float)
+        x[0] = x0
+        y[0] = y0
+        z[0] = z0
+        k = 0
+
+        while k < N:
+            # parte do y
+            k1 = dy(aux, y[k], z[k])
+            k1z = dz(aux, y[k], z[k])
+            k2 = dy(aux + h, y[k]+ h * k1, z[k] + h*k1z)
+            k2z = dz(aux + h, y[k]+ h * k1, z[k] + h*k1z)
+            y_aux = y[k] + h/2 * (k1 + k2)
+            z_aux = z[k] + h/2 * (k1z + k2z)
+            aux += h
+            k += 1
+            x[k] = aux
+            y[k] = y_aux
+            z[k] = z_aux
+        y = np.round(y, dp)
+        z = np.round(z, dp)
+        return (y[-1], z[-1], y, z, x)
+    
+    def runge_kutta4z(self, dz, z0, I, N = 5, dp = 4):
+        x0 = self._x0
+        y0 = self._y0
+        dy = self._dy
+        h = (I[1] - self._x0) / N
+        aux = x0
+        y = np.empty(N+1, dtype=float)
+        x = np.empty(N+1, dtype=float)
+        z = np.empty(N+1, dtype=float)
+        x[0] = x0
+        y[0] = y0
+        z[0] = z0
+        k = 0
+
+        while k < N:
+            k1 = dy(aux, y[k], z[k])
+            k1z = dz(aux, y[k], z[k])
+            k2 = dy(aux + h/2, y[k] + h/2 * k1, z[k] + h/2 * k1z)
+            k2z = dz(aux + h/2, y[k] + h/2 * k1, z[k] + h/2 * k1z)
+            k3 = dy(aux + h/2, y[k] + h/2 * k2, z[k] + h/2 * k2z)
+            k3z = dz(aux + h/2, y[k] + h/2 * k2, z[k] + h/2 * k2z)
+            k4 = dy(aux + h, y[k] + h * k3, z[k] + h * k3z)
+            k4z = dz(aux + h, y[k] + h * k3, z[k] + h * k3z)
+            y_aux = y[k] + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
+            z_aux = z[k] + h / 6 * (k1z + 2 * k2z + 2 * k3z + k4z)
+            #print(y_aux)
+            aux += h
+            k += 1
+            x[k] = aux
+            y[k] = y_aux
+            z[k] = z_aux
+        y = np.round(y, dp)
+        z = np.round(z, dp)
+        return (y[-1], z[-1], y, z, x)
+
+#Exemplo de como usar a classe EDo
+if __name__ == '__main__':
+    x = var('x')
+    y = var('y')
+    z = var('z')
+    x0 = 0
+    y0 = 1
+    z0 = 2
+    dy = Lambda((x, y, z), z)
+    dz = Lambda((x, y, z), -3*z -2*y + exp(x))
+    I = (0, 0.4)
+    N = 2
+    Y = EDO(dy, y0, x0)
+    res = Y.runge_kutta4z(dz, z0, I, N, dp=6)
+    print(res[0], res[1])
