@@ -42,7 +42,7 @@ class digital:
         self._Gz = self._Gsc.sample(self._tau)
         return self._Gsc.sample(self._tau)
     
-    def Fz(self, T_max = 10, fb=1, plot=False, save=False):
+    def Fz(self, T_max = 10, fb=1, plot=False, save=False, title =''):
         fz = feedback(self._Gz, fb)
         time, mag = step_response(fz, T_max * self._tau)
         self._fz = fz
@@ -58,6 +58,7 @@ class digital:
             mag_plot = np.array(mag_plot)
             plt.figure(figsize=(8, 5))
             plt.style.use('ggplot')
+            plt.title(title, fontsize='18', fontfamily='monospace')
             plt.plot(time_plot, mag_plot, linewidth=2, color='red')
             plt.plot(time_plot, np.ones(len(time_plot)), color='black', alpha=.5, linewidth=2)
             plt.xlabel('Número de amostras', fontfamily='monospace', fontsize='18')
